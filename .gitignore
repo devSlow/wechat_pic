@@ -1,0 +1,4 @@
+config/service.private.js
+project.private.config.json
+.DS_Store
+pages/.DS_Store

@@ -1,0 +1,213 @@
+<view class="page">
+  <view class="mode-header">
+    <text class="mode-title">图片工具</text>
+    <text class="mode-sub">压缩大小 / 添加水印 / 格式转换</text>
+  </view>
+
+  <view class="mode-tabs">
+    <view class="mode-tab {{mode === 'compress' ? 'active' : ''}}" data-mode="compress" bindtap="switchMode">压缩</view>
+    <view class="mode-tab {{mode === 'watermark' ? 'active' : ''}}" data-mode="watermark" bindtap="switchMode">水印</view>
+    <view class="mode-tab {{mode === 'convert' ? 'active' : ''}}" data-mode="convert" bindtap="switchMode">转换</view>
+  </view>
+
+  <!-- ===== 压缩 ===== -->
+  <block wx:if="{{mode === 'compress'}}">
+    <view class="card">
+      <text class="card-title">选择图片 ({{compressCount}}/9)</text>
+      <view class="compress-grid">
+        <view class="compress-item" wx:for="{{compressImages}}" wx:key="index">
+          <image src="{{item}}" mode="aspectFill" class="compress-img" />
+          <view class="compress-size">{{compressOriginalSizes[index]}}</view>
+          <view class="compress-remove" data-index="{{index}}" bindtap="removeCompressImage">✕</view>
+          <view class="compress-result-badge" wx:if="{{compressResults[index]}}">
+            <text>{{compressResultSizes[index]}}</text>
+          </view>
+        </view>
+        <view class="compress-add" wx:if="{{compressCount < 9}}" bindtap="chooseCompressImage">
+          <text class="add-icon">+</text>
+          <text class="add-label">添加</text>
+        </view>
+      </view>
+      <view class="compress-actions" wx:if="{{compressCount > 0}}">
+        <text class="clear-btn" bindtap="clearCompressImages">清空</text>
+      </view>
+    </view>
+
+    <view class="card" wx:if="{{compressCount > 0}}">
+      <!-- 目标大小设置 -->
+      <block wx:if="{{!compressResults.length}}">
+        <view class="card compact-card">
+          <view class="slider-item">
+            <text class="slider-label">目标大小</text>
+            <view class="slider-control">
+              <slider min="{{sliderMin}}" max="{{sliderMax}}" step="{{sliderStep}}" value="{{compressTargetKb}}" bindchanging="onTargetKbInput" bindchange="onTargetKbInput" activeColor="{{primary}}" />
+              <text class="slider-value">{{compressDisplayValue}}</text>
+            </view>
+          </view>
+        </view>
+        <view class="kb-options">
+          <view class="kb-option {{compressTargetKb === preset1 ? 'active' : ''}}" data-kb="{{preset1}}" bindtap="setTargetKb">{{preset1Label}}</view>
+          <view class="kb-option {{compressTargetKb === preset2 ? 'active' : ''}}" data-kb="{{preset2}}" bindtap="setTargetKb">{{preset2Label}}</view>
+          <view class="kb-option {{compressTargetKb === preset3 ? 'active' : ''}}" data-kb="{{preset3}}" bindtap="setTargetKb">{{preset3Label}}</view>
+          <view class="kb-option {{compressTargetKb === preset4 ? 'active' : ''}}" data-kb="{{preset4}}" bindtap="setTargetKb">{{preset4Label}}</view>
+        </view>
+        <view class="compress-action">
+          <button class="btn-primary" bindtap="doCompress">开始压缩 ({{compressCount}}张)</button>
+        </view>
+      </block>
+
+      <!-- 压缩结果 -->
+      <block wx:if="{{compressResults.length}}">
+        <view class="result-header">
+          <text class="card-title">压缩结果</text>
+          <text class="reset-btn" bindtap="clearCompressResults">重新压缩</text>
+        </view>
+        <view class="result-summary">
+          <view class="summary-item">
+            <text class="summary-label">图片数量</text>
+            <text class="summary-value">{{compressCount}}张</text>
+          </view>
+          <view class="summary-item">
+            <text class="summary-label">目标大小</text>
+            <text class="summary-value">{{compressTargetKb}}KB</text>
+          </view>
+          <view class="summary-item">
+            <text class="summary-label">成功率</text>
+            <text class="summary-value highlight">{{compressSuccessRate}}</text>
+          </view>
+        </view>
+        <view class="result-list">
+          <view class="result-item" wx:for="{{compressResults}}" wx:key="index" wx:if="{{item}}">
+            <view class="result-info">
+              <text class="result-from">{{compressOriginalSizes[index]}}</text>
+              <text wx:if="{{compressResultSizes[index] !== '不需要压缩'}}" class="result-arrow">→</text>
+              <text class="result-to {{compressResultSizes[index] === '不需要压缩' ? 'result-skip' : ''}}">{{compressResultSizes[index]}}</text>
+            </view>
+            <text wx:if="{{compressResultSizes[index] !== '不需要压缩'}}" class="result-rate">{{compressRates[index]}}</text>
+          </view>
+        </view>
+        <view class="result-actions">
+          <button class="btn-primary" bindtap="saveAllCompressResults">全部保存</button>
+        </view>
+      </block>
+    </view>
+  </block>
+
+  <!-- ===== 水印 ===== -->
+  <block wx:if="{{mode === 'watermark'}}">
+    <view class="card">
+      <text class="card-title">选择图片</text>
+      <view class="watermark-image-area" bindtap="{{watermarkImage ? '' : 'chooseWatermarkImage'}}">
+        <view class="upload-zone" wx:if="{{!watermarkImage}}">
+          <text class="upload-icon">+</text>
+          <text class="upload-label">点击选择图片</text>
+        </view>
+        <view class="watermark-preview-box" wx:if="{{watermarkImage}}">
+          <image src="{{watermarkPreview || watermarkImage}}" mode="aspectFit" class="watermark-preview-img" />
+          <view class="watermark-remove" bindtap="removeWatermarkImage">✕</view>
+        </view>
+      </view>
+      <view class="watermark-reupload" wx:if="{{watermarkImage}}" bindtap="chooseWatermarkImage">
+        <text class="watermark-reupload-text">重新上传</text>
+      </view>
+    </view>
+
+    <view class="card" wx:if="{{watermarkImage}}">
+      <text class="card-title">水印文字</text>
+      <view class="watermark-input-wrapper">
+        <input class="watermark-input" placeholder="请输入水印文字" placeholder-style="line-height: 88rpx; color: var(--text-tertiary);" value="{{watermarkText}}" bindinput="onWatermarkTextChange" />
+      </view>
+    </view>
+
+    <view class="card" wx:if="{{watermarkImage && watermarkText}}">
+      <text class="card-title">文字颜色</text>
+      <view class="color-grid">
+        <view class="color-swatch {{watermarkColor === '#FFFFFF' ? 'active' : ''}}" data-color="#FFFFFF" bindtap="setWatermarkColor">
+          <view class="color-fill" style="background:#FFFFFF;"></view>
+          <text class="color-label">白色</text>
+        </view>
+        <view class="color-swatch {{watermarkColor === '#000000' ? 'active' : ''}}" data-color="#000000" bindtap="setWatermarkColor">
+          <view class="color-fill" style="background:#000000;"></view>
+          <text class="color-label">黑色</text>
+        </view>
+        <view class="color-swatch {{watermarkColor === '#FF0000' ? 'active' : ''}}" data-color="#FF0000" bindtap="setWatermarkColor">
+          <view class="color-fill" style="background:#FF0000;"></view>
+          <text class="color-label">红色</text>
+        </view>
+        <view class="color-swatch {{watermarkColor === '#0000FF' ? 'active' : ''}}" data-color="#0000FF" bindtap="setWatermarkColor">
+          <view class="color-fill" style="background:#0000FF;"></view>
+          <text class="color-label">蓝色</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="card compact-card" wx:if="{{watermarkImage && watermarkText}}">
+      <view class="slider-group">
+        <view class="slider-item">
+          <text class="slider-label">不透明度</text>
+          <view class="slider-control">
+            <slider min="10" max="100" step="5" value="{{watermarkOpacity}}" bindchanging="onOpacityInput" bindchange="onOpacityChange" activeColor="{{primary}}" />
+            <text class="slider-value">{{watermarkOpacity}}%</text>
+          </view>
+        </view>
+        <view class="slider-item">
+          <text class="slider-label">水印角度</text>
+          <view class="slider-control">
+            <slider min="-90" max="0" step="5" value="{{watermarkAngle}}" bindchanging="onAngleInput" bindchange="onAngleChange" activeColor="{{primary}}" />
+            <text class="slider-value">{{watermarkAngle}}°</text>
+          </view>
+        </view>
+        <view class="slider-item">
+          <text class="slider-label">水印大小</text>
+          <view class="slider-control">
+            <slider min="16" max="120" step="4" value="{{watermarkFontSize}}" bindchanging="onFontSizeInput" bindchange="onFontSizeChange" activeColor="{{primary}}" />
+            <text class="slider-value">{{watermarkFontSize}}px</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="action-bar" wx:if="{{watermarkImage && watermarkText}}">
+      <button class="btn-primary" bindtap="doWatermark">保存图片</button>
+    </view>
+  </block>
+
+  <!-- ===== 转换 ===== -->
+  <block wx:if="{{mode === 'convert'}}">
+    <view class="card">
+      <text class="card-title">选择图片 ({{convertCount}}/9)</text>
+      <view class="compress-grid">
+        <view class="compress-item" wx:for="{{convertImages}}" wx:key="index">
+          <image src="{{item}}" mode="aspectFill" class="compress-img" />
+          <view class="convert-format-badge">{{convertOriginalFormats[index]}}</view>
+          <view class="compress-remove" data-index="{{index}}" bindtap="removeConvertImage">✕</view>
+        </view>
+        <view class="compress-add" wx:if="{{convertCount < 9}}" bindtap="chooseConvertImage">
+          <text class="add-icon">+</text>
+          <text class="add-label">添加</text>
+        </view>
+      </view>
+      <view class="compress-actions" wx:if="{{convertCount > 0}}">
+        <text class="clear-btn" bindtap="clearConvertImages">清空</text>
+      </view>
+    </view>
+
+    <view class="card compact-card" wx:if="{{convertCount > 0}}">
+      <text class="card-title">目标格式</text>
+      <view class="format-options">
+        <view class="format-btn {{convertFormat === 'png' ? 'active' : ''}}" wx:if="{{!allPng}}" data-format="png" bindtap="setConvertFormat">PNG</view>
+        <view class="format-btn {{convertFormat === 'jpg' ? 'active' : ''}}" wx:if="{{!allJpg}}" data-format="jpg" bindtap="setConvertFormat">JPG</view>
+        <view class="format-btn {{convertFormat === 'webp' ? 'active' : ''}}" wx:if="{{!allWebp}}" data-format="webp" bindtap="setConvertFormat">WebP</view>
+        <view class="format-btn {{convertFormat === 'bmp' ? 'active' : ''}}" wx:if="{{!allBmp}}" data-format="bmp" bindtap="setConvertFormat">BMP</view>
+        <view class="format-btn {{convertFormat === 'tiff' ? 'active' : ''}}" wx:if="{{!allTiff}}" data-format="tiff" bindtap="setConvertFormat">TIFF</view>
+      </view>
+    </view>
+
+    <view class="action-bar" wx:if="{{convertCount > 0 && convertFormat}}">
+      <button class="btn-primary" bindtap="doConvert">开始转换 ({{convertCount}}张)</button>
+    </view>
+  </block>
+
+  <canvas type="2d" id="watermarkCanvas" style="position:fixed;top:-9999px;left:-9999px;width:600px;height:600px;"></canvas>
+  <canvas type="2d" id="convertCanvas" style="position:fixed;top:-9999px;left:-9999px;width:600px;height:600px;"></canvas>
+</view>

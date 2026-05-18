@@ -1,0 +1,197 @@
+<view class="page">
+  <view class="mode-header">
+    <text class="mode-title">拼图</text>
+    <text class="mode-sub">多图拼接 / 宫格拼图 / 九宫格切图</text>
+  </view>
+
+  <view class="mode-tabs">
+    <view class="mode-tab {{mode === 'stitch' ? 'active' : ''}}" data-mode="stitch" bindtap="switchMode">多图拼接</view>
+    <view class="mode-tab {{mode === 'collage' ? 'active' : ''}}" data-mode="collage" bindtap="switchMode">宫格拼图</view>
+    <view class="mode-tab {{mode === 'grid9' ? 'active' : ''}}" data-mode="grid9" bindtap="switchMode">九宫格切图</view>
+  </view>
+
+  <block wx:if="{{mode === 'stitch' && !resultImages.length}}">
+    <view class="card">
+      <text class="card-title">选择图片 ({{images.length}}/9)</text>
+      <view class="image-grid">
+        <view class="image-grid-item" wx:for="{{images}}" wx:key="*this">
+          <image src="{{item}}" mode="aspectFill" class="image-grid-img" />
+          <view class="image-grid-remove" data-index="{{index}}" bindtap="removeImage">✕</view>
+        </view>
+        <view class="image-grid-add" wx:if="{{images.length < 9}}" bindtap="addImage">
+          <text class="image-grid-add-icon">+</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="card compact-card">
+      <view class="setting-row" bindtap="toggleDirection">
+        <text class="setting-label">拼接方向</text>
+        <view class="setting-value">
+          <text>{{direction === 'vertical' ? '竖向拼接' : '横向拼接'}}</text>
+          <text class="setting-arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="action-bar">
+      <button class="btn-primary {{images.length < 2 ? 'disabled' : ''}}" disabled="{{images.length < 2}}" bindtap="doStitch">
+        {{images.length < 2 ? '至少选择2张' : '开始拼接'}}
+      </button>
+    </view>
+  </block>
+
+
+
+  <block wx:if="{{mode === 'collage' && !resultImages.length}}">
+    <view class="card">
+      <text class="card-title">拼图布局</text>
+      <view class="collage-opts">
+        <view class="collage-opt {{collageLayout === '2x1' ? 'active' : ''}}" data-layout="2x1" bindtap="selectCollageLayout">
+          <view class="layout-icon grid-2x1">
+            <view class="layout-cell"></view>
+            <view class="layout-cell"></view>
+          </view>
+          <text class="layout-label">二宫格</text>
+        </view>
+        <view class="collage-opt {{collageLayout === '3x1' ? 'active' : ''}}" data-layout="3x1" bindtap="selectCollageLayout">
+          <view class="layout-icon grid-3x1">
+            <view class="layout-cell"></view>
+            <view class="layout-cell"></view>
+            <view class="layout-cell"></view>
+          </view>
+          <text class="layout-label">三宫格</text>
+        </view>
+        <view class="collage-opt {{collageLayout === '2x2' ? 'active' : ''}}" data-layout="2x2" bindtap="selectCollageLayout">
+          <view class="layout-icon grid-2x2">
+            <view class="layout-cell"></view>
+            <view class="layout-cell"></view>
+            <view class="layout-cell"></view>
+            <view class="layout-cell"></view>
+          </view>
+          <text class="layout-label">四宫格</text>
+        </view>
+        <view class="collage-opt {{collageLayout === '3x2' ? 'active' : ''}}" data-layout="3x2" bindtap="selectCollageLayout">
+          <view class="layout-icon grid-3x2">
+            <view class="layout-cell"></view>
+            <view class="layout-cell"></view>
+            <view class="layout-cell"></view>
+            <view class="layout-cell"></view>
+            <view class="layout-cell"></view>
+            <view class="layout-cell"></view>
+          </view>
+          <text class="layout-label">六宫格</text>
+        </view>
+        <view class="collage-opt {{collageLayout === '3x3' ? 'active' : ''}}" data-layout="3x3" bindtap="selectCollageLayout">
+          <view class="layout-icon grid-3x3">
+            <view class="layout-cell"></view>
+            <view class="layout-cell"></view>
+            <view class="layout-cell"></view>
+            <view class="layout-cell"></view>
+            <view class="layout-cell"></view>
+            <view class="layout-cell"></view>
+            <view class="layout-cell"></view>
+            <view class="layout-cell"></view>
+            <view class="layout-cell"></view>
+          </view>
+          <text class="layout-label">九宫格</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="card" wx:if="{{collageLayout}}">
+      <text class="card-title">选择图片 ({{collageFilled}}/{{collageImages.length}})</text>
+      <view class="collage-grid" style="grid-template-columns: repeat({{collageCols}}, 1fr);">
+        <view class="collage-cell" wx:for="{{collageImages}}" wx:for-index="i" wx:key="i">
+          <block wx:if="{{item}}">
+            <view class="collage-filled">
+              <image src="{{item}}" mode="aspectFill" class="collage-img" />
+              <view class="collage-remove" data-index="{{i}}" bindtap="removeCollageImage">✕</view>
+            </view>
+          </block>
+          <block wx:else>
+            <view class="collage-empty">
+              <text class="slot-plus">+</text>
+              <text class="slot-label">空位</text>
+            </view>
+          </block>
+        </view>
+      </view>
+      <view class="add-btn-area" bindtap="addCollageImages" wx:if="{{collageFilled < collageImages.length}}">
+        <text class="add-btn-text">+ 添加图片</text>
+      </view>
+    </view>
+
+    <view class="action-bar" wx:if="{{collageLayout}}">
+      <button class="btn-primary" bindtap="doCollage">开始拼图</button>
+    </view>
+  </block>
+
+  <block wx:if="{{resultImages.length && mode === 'collage'}}">
+    <view class="card result-card {{animClass}}">
+      <text class="card-title">拼图结果</text>
+      <view class="preview-box">
+        <image src="{{resultImages[0]}}" mode="widthFix" class="preview-img" />
+      </view>
+      <view class="action-bar" style="margin-top:20rpx;">
+        <button class="btn-primary" bindtap="saveResult" data-src="{{resultImages[0]}}">保存到相册</button>
+      </view>
+      <view class="result-foot">
+        <text class="result-foot-link" bindtap="resetCollage">重新拼图</text>
+      </view>
+    </view>
+  </block>
+
+
+  <block wx:if="{{resultImages.length && mode === 'stitch'}}">
+    <view class="card result-card {{animClass}}">
+      <text class="card-title">拼接结果</text>
+      <view class="preview-box">
+        <image src="{{resultImages[0]}}" mode="widthFix" class="preview-img" />
+      </view>
+      <view class="action-bar" style="margin-top:20rpx;">
+        <button class="btn-primary" bindtap="saveResult" data-src="{{resultImages[0]}}">保存到相册</button>
+      </view>
+      <view class="result-foot">
+        <text class="result-foot-link" bindtap="resetStitch">重新拼接</text>
+      </view>
+    </view>
+  </block>
+
+  <block wx:if="{{mode === 'grid9'}}">
+    <view class="card" wx:if="{{!grid9Image && !grid9Result.length}}">
+      <text class="card-title">选择图片</text>
+      <view class="upload-zone" bindtap="chooseGrid9Image">
+        <text class="upload-icon">+</text>
+        <text class="upload-label">点击选择图片</text>
+      </view>
+    </view>
+
+    <view class="card" wx:elif="{{grid9Image && !grid9Result.length}}">
+      <text class="card-title">预览</text>
+      <view class="preview-box">
+        <image src="{{grid9Image}}" mode="aspectFit" class="preview-img" />
+        <view class="preview-change" bindtap="chooseGrid9Image">重新选择</view>
+      </view>
+      <view class="action-bar" style="margin-top:20rpx;">
+        <button class="btn-primary" bindtap="doGrid9Cut">开始切图</button>
+      </view>
+    </view>
+
+    <view class="card" wx:if="{{grid9Result.length}}">
+      <text class="card-title">九宫格切片</text>
+      <view class="grid9-grid">
+        <view class="grid9-cell" wx:for="{{grid9Result}}" wx:key="index" data-index="{{index}}" bindtap="previewGrid9">
+          <image src="{{item}}" mode="aspectFill" class="grid9-img" />
+        </view>
+      </view>
+      <view class="action-bar" style="margin-top:20rpx;">
+        <button class="btn-primary" bindtap="saveGrid9Results">全部保存</button>
+        <view class="preview-change" bindtap="resetGrid9">重新选择</view>
+      </view>
+    </view>
+  </block>
+
+  <canvas type="2d" id="stitchCanvas" style="position:fixed;top:-9999px;left:-9999px;width:600px;height:800px;"></canvas>
+  <canvas type="2d" id="grid9Canvas" style="position:fixed;top:-9999px;left:-9999px;width:600px;height:600px;"></canvas>
+</view>

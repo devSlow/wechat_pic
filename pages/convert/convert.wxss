@@ -1,0 +1,37 @@
+.fmt-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+
+.fmt-item {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 22rpx 20rpx;
+  border: 1.5rpx solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: all 0.1s;
+}
+
+.fmt-item:active { transform: scale(0.98); }
+.fmt-item.active { border-color: var(--primary); background: var(--primary-bg); }
+
+.fmt-badge {
+  padding: 6rpx 18rpx;
+  border-radius: var(--radius-sm);
+  font-size: 26rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  flex-shrink: 0;
+}
+
+.fmt-desc {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+.preview-image {
+  width: 100%;
+  border-radius: var(--radius-sm);
+}

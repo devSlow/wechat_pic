@@ -1,0 +1,42 @@
+<view class="page" wx:if="{{loaded}}">
+  <scroll-view scroll-y class="content-scroll">
+    <view class="content">
+      <text class="title">用户协议</text>
+      <text class="update-time">更新时间：2024年1月1日</text>
+      
+      <text class="section-title">一、服务说明</text>
+      <text class="paragraph">本小程序是一款图片处理工具，为用户提供以下功能：</text>
+      <text class="paragraph">1. 证件照制作：支持多种规格的证件照生成</text>
+      <text class="paragraph">2. 图片拼接：多图拼接、宫格拼图、宫格切图</text>
+      <text class="paragraph">3. 图片压缩：自定义目标大小进行图片压缩</text>
+      <text class="paragraph">4. 水印添加：为图片添加文字水印</text>
+      <text class="paragraph">5. 格式转换：支持多种图片格式互转</text>
+      
+      <text class="section-title">二、使用规范</text>
+      <text class="paragraph">1. 用户应合法使用本小程序，不得用于任何违法违规用途</text>
+      <text class="paragraph">2. 用户上传的图片内容应符合相关法律法规</text>
+      <text class="paragraph">3. 用户不得利用本小程序处理涉及侵权、色情、暴力等违法内容</text>
+      <text class="paragraph">4. 本小程序保留对违规使用进行处理的权利</text>
+      
+      <text class="section-title">三、知识产权</text>
+      <text class="paragraph">1. 本小程序的所有技术、代码、界面设计等知识产权归开发者所有</text>
+      <text class="paragraph">2. 用户使用本小程序处理的图片，其版权归原作者所有</text>
+      <text class="paragraph">3. 本小程序生成的证件照等图片，用户可自由使用</text>
+      
+      <text class="section-title">四、免责声明</text>
+      <text class="paragraph">1. 本小程序仅供学习交流使用，不保证服务的绝对稳定性</text>
+      <text class="paragraph">2. 因网络、服务器等原因导致的服务中断，本小程序不承担责任</text>
+      <text class="paragraph">3. 用户使用本小程序处理图片所产生的一切后果由用户自行承担</text>
+      <text class="paragraph">4. 本小程序不对用户上传图片的内容合法性承担责任</text>
+      
+      <text class="section-title">五、服务变更</text>
+      <text class="paragraph">1. 本小程序有权根据实际情况调整服务内容</text>
+      <text class="paragraph">2. 服务变更将通过小程序更新或公告方式通知用户</text>
+      <text class="paragraph">3. 继续使用本小程序视为接受变更后的服务</text>
+      
+      <text class="section-title">六、其他条款</text>
+      <text class="paragraph">1. 本协议的最终解释权归开发者所有</text>
+      <text class="paragraph">2. 如有任何疑问，请通过意见反馈功能联系开发者</text>
+    </view>
+  </scroll-view>
+</view>

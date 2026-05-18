@@ -1,0 +1,46 @@
+<view class="page">
+  <view class="card" style="margin-top: 16rpx;">
+    <text class="section-title">图片</text>
+    <view class="upload-area" wx:if="{{!sourceImage}}" bindtap="chooseImage">
+      <image class="icon-svg lg" src="{{iconUpload}}" mode="aspectFit" style="margin:0 auto;" />
+      <text class="upload-text">选择图片</text>
+    </view>
+    <image src="{{sourceImage}}" mode="aspectFit" class="preview-image" wx:else />
+  </view>
+
+  <block wx:if="{{sourceImage}}">
+    <view class="card">
+      <text class="section-title">目标格式</text>
+      <view class="fmt-list">
+        <view class="fmt-item {{targetFormat === 'png' ? 'active' : ''}}" data-format="png" bindtap="selectFormat">
+          <view class="fmt-badge" style="background:var(--primary-bg);color:var(--primary);">PNG</view>
+          <text class="fmt-desc">无损 / 支持透明</text>
+        </view>
+        <view class="fmt-item {{targetFormat === 'jpg' ? 'active' : ''}}" data-format="jpg" bindtap="selectFormat">
+          <view class="fmt-badge" style="background:#FFF7ED;color:#F97316;">JPG</view>
+          <text class="fmt-desc">有损 / 体积小</text>
+        </view>
+        <view class="fmt-item {{targetFormat === 'webp' ? 'active' : ''}}" data-format="webp" bindtap="selectFormat">
+          <view class="fmt-badge" style="background:#F0FDF4;color:#22C55E;">WebP</view>
+          <text class="fmt-desc">更优压缩率</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="action-bar">
+      <button class="btn-primary" bindtap="doConvert">转换为 {{targetFormat.toUpperCase()}}</button>
+    </view>
+
+    <view class="card" wx:if="{{resultImage}}">
+      <text class="section-title">结果</text>
+      <image src="{{resultImage}}" mode="aspectFit" class="preview-image" />
+      <view style="margin-top:20rpx;">
+        <button class="btn-primary" bindtap="saveResult">保存</button>
+        <button class="btn-secondary" bindtap="reset" style="margin-top:14rpx;">重新选择</button>
+      </view>
+    </view>
+  </block>
+
+  <!-- Hidden canvas for Canvas 2D processing -->
+  <canvas type="2d" id="convertCanvas" style="position:fixed;top:-9999px;left:-9999px;width:600px;height:600px;"></canvas>
+</view>

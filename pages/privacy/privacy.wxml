@@ -1,0 +1,47 @@
+<view class="page" wx:if="{{loaded}}">
+  <scroll-view scroll-y class="content-scroll">
+    <view class="content">
+      <text class="title">隐私政策</text>
+      <text class="update-time">更新时间：2026年5月1日</text>
+      
+      <text class="section-title">一、信息收集</text>
+      <text class="paragraph">1. 本小程序在使用过程中会收集以下信息：</text>
+      <text class="paragraph">   - 微信OpenID：用于标识用户身份</text>
+      <text class="paragraph">   - 上传的图片：用于提供图片处理服务</text>
+      <text class="paragraph">2. 本小程序不会主动收集用户的其他个人信息</text>
+      
+      <text class="section-title">二、信息使用</text>
+      <text class="paragraph">1. 收集的OpenID仅用于区分不同用户，不会用于其他用途</text>
+      <text class="paragraph">2. 用户上传的图片仅用于处理，处理完成后不会在服务器长期保存</text>
+      <text class="paragraph">3. 本小程序不会将用户信息用于商业推广或广告投放</text>
+      
+      <text class="section-title">三、信息存储</text>
+      <text class="paragraph">1. 用户的OpenID存储在微信本地缓存中</text>
+      <text class="paragraph">2. 上传的图片在处理完成后会自动删除</text>
+      <text class="paragraph">3. 本小程序不会永久存储用户的任何图片数据</text>
+      
+      <text class="section-title">四、信息共享</text>
+      <text class="paragraph">1. 本小程序不会向任何第三方分享用户的个人信息</text>
+      <text class="paragraph">2. 本小程序不会将用户数据用于数据分析或用户画像</text>
+      <text class="paragraph">3. 除法律法规要求外，本小程序不会向任何机构提供用户数据</text>
+      
+      <text class="section-title">五、安全保障</text>
+      <text class="paragraph">1. 本小程序采用HTTPS加密传输，保障数据传输安全</text>
+      <text class="paragraph">2. 服务器采取必要的安全措施，防止数据泄露</text>
+      <text class="paragraph">3. 如发现安全漏洞，将及时修复并通知用户</text>
+      
+      <text class="section-title">六、用户权利</text>
+      <text class="paragraph">1. 用户可随时清除本地缓存数据</text>
+      <text class="paragraph">2. 用户可随时停止使用本小程序</text>
+      <text class="paragraph">3. 用户有权要求删除其相关数据</text>
+      
+      <text class="section-title">七、隐私政策更新</text>
+      <text class="paragraph">1. 隐私政策可能会不定期更新</text>
+      <text class="paragraph">2. 更新后的隐私政策将在小程序内公布</text>
+      <text class="paragraph">3. 继续使用本小程序视为接受更新后的隐私政策</text>
+      
+      <text class="section-title">八、联系方式</text>
+      <text class="paragraph">如有任何隐私相关问题，请通过意见反馈功能联系我们</text>
+    </view>
+  </scroll-view>
+</view>

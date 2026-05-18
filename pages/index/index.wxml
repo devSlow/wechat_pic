@@ -1,0 +1,156 @@
+<page-meta page-style="{{showSizePanel ? 'overflow: hidden' : ''}}"></page-meta>
+<view class="page">
+
+  <!-- ===== 选择规格 ===== -->
+  <block wx:if="{{screen === 'spec'}}">
+    <view class="mode-header">
+      <text class="mode-title">证件照制作</text>
+      <text class="mode-sub">选择规格，拍照或上传自动生成</text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">常用规格</text>
+      <view class="spec-list">
+        <view
+          class="spec-card {{selectedSpec && selectedSpec.name === item.name ? 'active' : ''}}"
+          wx:for="{{quickSpecs}}" wx:key="name"
+          data-item="{{item}}"
+          bindtap="pickQuickSpec"
+        >
+          <view class="spec-card-color" style="background:{{item.color}};"></view>
+          <view class="spec-card-body">
+            <text class="spec-card-name">{{item.name}}</text>
+            <text class="spec-card-desc" wx:if="{{item.desc}}">{{item.desc}}</text>
+          </view>
+          <view class="spec-card-right">
+            <text class="spec-card-size" wx:if="{{item.pxW}}">{{item.pxW}}×{{item.pxH}}</text>
+            <view class="spec-card-check" wx:if="{{selectedSpec && selectedSpec.name === item.name}}">
+              <text class="check-icon">✓</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="more-specs" bindtap="showSizePanel">
+        <text class="more-specs-text">查看更多规格</text>
+        <text class="more-specs-arrow">›</text>
+      </view>
+    </view>
+
+    <view class="action-bar">
+      <button class="btn-primary {{!selectedSpec ? 'disabled' : ''}}" disabled="{{!selectedSpec}}" bindtap="takePhoto">拍照制作</button>
+      <button class="btn-secondary {{!selectedSpec ? 'disabled' : ''}}" disabled="{{!selectedSpec}}" bindtap="choosePhoto">从相册选择</button>
+    </view>
+  </block>
+
+  <!-- ===== 处理中 ===== -->
+  <block wx:elif="{{screen === 'processing'}}">
+    <view class="loading-box">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">正在处理中...</text>
+      <text class="loading-sub">{{selectedSpec ? selectedSpec.name : ''}}</text>
+    </view>
+  </block>
+
+  <!-- ===== 结果编辑 ===== -->
+  <block wx:elif="{{screen === 'result'}}">
+    <scroll-view scroll-y class="result-box">
+      <view class="result-header">
+        <text class="result-title">预览效果</text>
+        <text class="result-spec">{{selectedSpec.name}} {{selectedSpec.pxW}}×{{selectedSpec.pxH}}px</text>
+      </view>
+
+      <view class="result-preview">
+        <view class="preview-wrapper" wx:if="{{!isLayout}}">
+          <view class="preview-top-label">
+            <text class="label-text">{{selectedSpec.pxW}}px</text>
+          </view>
+          <view class="preview-middle">
+            <view class="preview-left-label">
+              <text class="label-text">{{selectedSpec.pxH}}px</text>
+            </view>
+            <view class="preview-photo-box" style="background-color:{{selectedColor}};width:{{previewWidth}}rpx;height:{{previewHeight}}rpx;">
+              <image class="preview-image" src="{{previewPath}}" mode="aspectFit" style="width:{{previewWidth}}rpx;height:{{previewHeight}}rpx;"></image>
+            </view>
+            <view class="preview-right-label">
+              <text class="label-text">{{selectedSpec.pxH}}px</text>
+            </view>
+          </view>
+          <view class="preview-bottom-label">
+            <text class="label-text">{{selectedSpec.pxW}}px</text>
+          </view>
+        </view>
+        <image wx:if="{{isLayout && layoutPath}}" class="layout-image" src="{{layoutPath}}" mode="widthFix"></image>
+      </view>
+
+      <view class="color-section">
+        <text class="section-title">背景颜色</text>
+        <view class="color-options">
+          <view
+            class="color-item {{selectedColor === item.value ? 'active' : ''}}"
+            wx:for="{{bgColors}}" wx:key="value"
+            data-color="{{item.value}}"
+            bindtap="changeBgColor"
+          >
+            <view class="color-circle" style="background:{{item.value}};border:{{item.value === '#FFFFFF' ? '2rpx solid #E5E5E5' : 'none'}};"></view>
+            <text class="color-name">{{item.name}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="hd-section" wx:if="{{transparentHDPath}}">
+        <view class="hd-row">
+          <text class="hd-label">高清画质</text>
+          <switch class="hd-switch" color="var(--primary)" checked="{{isHD}}" bindchange="toggleHD"></switch>
+        </view>
+      </view>
+
+      <view class="action-bar">
+        <button class="btn-primary" bindtap="exportSave">保存到相册</button>
+        <button class="btn-secondary" bindtap="toggleView" wx:if="{{canLayout}}">
+          {{isLayout ? '切换单张' : '6寸相纸排版'}}
+        </button>
+        <view class="retake-btn" bindtap="retake">重新上传</view>
+      </view>
+    </scroll-view>
+  </block>
+</view>
+
+<canvas type="2d" id="layoutCanvas" class="layout-canvas hidden" style="width:100%;height:480rpx;"></canvas>
+
+<!-- ===== 规格面板 ===== -->
+<block wx:if="{{showSizePanel}}">
+  <view class="panel-mask" bindtap="hideSizePanel"></view>
+  <view class="panel-content show">
+    <view class="panel-header">
+      <text class="panel-title">选择规格</text>
+      <view class="panel-close" bindtap="hideSizePanel">
+        <text class="close-icon">×</text>
+      </view>
+    </view>
+    <view class="panel-tabs">
+      <view class="panel-tab {{specTab === 'common' ? 'active' : ''}}" data-tab="common" bindtap="switchSpecTab">通用</view>
+      <view class="panel-tab {{specTab === 'exam' ? 'active' : ''}}" data-tab="exam" bindtap="switchSpecTab">考试</view>
+      <view class="panel-tab {{specTab === 'visa' ? 'active' : ''}}" data-tab="visa" bindtap="switchSpecTab">签证</view>
+    </view>
+    <scroll-view scroll-y class="panel-list">
+      <view
+        class="spec-row {{selectedSpec && selectedSpec.name === item.name ? 'active' : ''}}"
+        wx:for="{{currentSizes}}" wx:key="index"
+        data-item="{{item}}" data-tab="{{specTab}}"
+        bindtap="pickSpec"
+      >
+        <view class="spec-row-dot" style="background:{{item.color || 'var(--primary)'}};"></view>
+        <view class="spec-row-body">
+          <text class="spec-row-name">{{item.name}}</text>
+          <text class="spec-row-size">
+            <text wx:if="{{item.pxW}}">{{item.pxW}}×{{item.pxH}}px</text>
+            <text wx:if="{{item.mmW}}"> · {{item.mmW}}×{{item.mmH}}mm</text>
+          </text>
+        </view>
+        <view class="spec-row-check" wx:if="{{selectedSpec && selectedSpec.name === item.name}}">
+          <text class="check-icon">✓</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</block>

@@ -1,0 +1,44 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.content-scroll {
+  height: 100vh;
+}
+
+.content {
+  padding: 32rpx 28rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--text);
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.update-time {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 40rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text);
+  display: block;
+  margin-top: 32rpx;
+  margin-bottom: 16rpx;
+}
+
+.paragraph {
+  font-size: 26rpx;
+  color: var(--text);
+  line-height: 1.8;
+  display: block;
+  margin-bottom: 8rpx;
+}

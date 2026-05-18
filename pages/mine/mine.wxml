@@ -1,0 +1,71 @@
+<view class="page">
+  <view class="about-header">
+    <view class="app-icon">
+      <image src="/images/icon.png" class="app-icon-img" mode="aspectFit" />
+    </view>
+    <text class="app-name">咔拼鸭</text>
+    <view class="version-row">
+      <text class="app-version">v1.0.6</text>
+    </view>
+  </view>
+
+  <view class="section-group">
+    <view class="menu-card">
+      <view class="menu-item">
+        <button class="menu-btn" open-type="contact">
+          <view class="menu-item-inner">
+            <view class="menu-icon green">
+              <text class="icon-letter">F</text>
+            </view>
+            <text class="menu-name">意见反馈</text>
+          </view>
+        </button>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-group">
+    <view class="menu-card">
+      <view class="menu-item">
+        <view class="menu-icon teal">
+          <text class="icon-letter">D</text>
+        </view>
+        <view class="menu-body">
+          <text class="menu-name">开发者</text>
+          <text class="menu-desc">团队</text>
+        </view>
+      </view>
+      <view class="menu-divider"></view>
+      <view class="menu-item" bindtap="copyEmail">
+        <view class="menu-icon amber">
+          <text class="icon-letter">E</text>
+        </view>
+        <view class="menu-body">
+          <text class="menu-name">联系邮箱</text>
+          <text class="menu-desc">contact@example.com</text>
+        </view>
+      </view>
+      <view class="menu-divider"></view>
+      <view class="menu-item" bindtap="openVerify">
+        <view class="menu-icon green">
+          <text class="icon-letter">V</text>
+        </view>
+        <view class="menu-body">
+          <text class="menu-name">验证码</text>
+          <text class="menu-desc">输入 SessionID 查询</text>
+        </view>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="footer">
+    <view class="footer-links">
+      <text class="footer-link" bindtap="openAgreement">用户协议</text>
+      <text class="footer-divider">|</text>
+      <text class="footer-link" bindtap="openPrivacy">隐私政策</text>
+    </view>
+    <text class="footer-copyright">© 2026 咔拼鸭</text>
+  </view>
+</view>
