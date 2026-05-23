@@ -107,20 +107,8 @@
       </view>
       <view class="category-scroll">
         <view class="category-track">
-          <view class="category-pill {{libraryTab === 'all' ? 'active' : ''}}" data-tab="all" bindtap="setLibraryTab">
-            <text>全部</text>
-          </view>
-          <view class="category-pill {{libraryTab === 'realistic' ? 'active' : ''}}" data-tab="realistic" bindtap="setLibraryTab">
-            <text>写实</text>
-          </view>
-          <view class="category-pill {{libraryTab === 'anime' ? 'active' : ''}}" data-tab="anime" bindtap="setLibraryTab">
-            <text>动漫</text>
-          </view>
-          <view class="category-pill {{libraryTab === 'oil' ? 'active' : ''}}" data-tab="oil" bindtap="setLibraryTab">
-            <text>油画</text>
-          </view>
-          <view class="category-pill {{libraryTab === 'sketch' ? 'active' : ''}}" data-tab="sketch" bindtap="setLibraryTab">
-            <text>素描</text>
+          <view class="category-pill {{libraryTab === item.key ? 'active' : ''}}" data-tab="{{item.key}}" bindtap="setLibraryTab" wx:for="{{categories}}" wx:key="key">
+            <text>{{item.label}}</text>
           </view>
         </view>
       </view>

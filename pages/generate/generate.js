@@ -1,5 +1,5 @@
 const { createShareOptions, createTimelineOptions } = require('../../utils/share')
-const { getPrompts, fetchRemotePrompts } = require('../../services/prompts')
+const { getPrompts, fetchRemotePrompts, CATEGORIES } = require('../../services/prompts')
 
 Page({
   data: {
@@ -17,6 +17,7 @@ Page({
     libraryTab: 'all',
     searchQuery: '',
     detailItem: null,
+    categories: CATEGORIES,
   },
 
   onLoad() {

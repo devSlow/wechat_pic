@@ -1,13 +1,15 @@
 {
   "description": "证件照 + 图片处理小程序",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      { "type": "file", "value": "data/prompts.json" }
+    ],
     "include": []
   },
   "setting": {
     "bundle": false,
     "userConfirmedBundleSwitch": false,
-    "urlCheck": true,
+    "urlCheck": false,
     "scopeDataCheck": false,
     "coverView": true,
     "es6": true,
@@ -48,7 +50,7 @@
   },
   "compileType": "miniprogram",
   "libVersion": "3.3.4",
-  "appid": "touristappid",
+  "appid": "wx8e34745c9f31706c",
   "projectname": "pic-tools",
   "condition": {},
   "editorSetting": {
