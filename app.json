@@ -1,14 +1,11 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/stitch/stitch",
-    "pages/tools/tools",
+    "pages/generate/generate",
     "pages/mine/mine",
     "pages/verify/verify",
     "pages/agreement/agreement",
-    "pages/privacy/privacy",
-    "pages/compress/compress",
-    "pages/convert/convert"
+    "pages/privacy/privacy"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",
@@ -17,26 +14,20 @@
     "backgroundColor": "#F8FAFC"
   },
   "tabBar": {
-    "color": "#94A3B8",
-    "selectedColor": "#2563EB",
+    "color": "#8E8E93",
+    "selectedColor": "#007AFF",
     "backgroundColor": "#FFFFFF",
     "borderStyle": "white",
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "证件照",
-        "iconPath": "images/zhengjianzhao.png",
-        "selectedIconPath": "images/zhengjianzhao_tap.png"
+        "text": "首页",
+        "iconPath": "images/home.png",
+        "selectedIconPath": "images/home_tap.png"
       },
       {
-        "pagePath": "pages/stitch/stitch",
-        "text": "拼接",
-        "iconPath": "images/pinjie.png",
-        "selectedIconPath": "images/pinjie_tap.png"
-      },
-      {
-        "pagePath": "pages/tools/tools",
-        "text": "工具",
+        "pagePath": "pages/generate/generate",
+        "text": "生图",
         "iconPath": "images/gongju.png",
         "selectedIconPath": "images/gongju_tap.png"
       },

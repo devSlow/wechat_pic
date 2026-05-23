@@ -1,0 +1,161 @@
+<view class="page">
+  <view class="tab-bar">
+    <view class="tab-item {{tab === 'generate' ? 'active' : ''}}" data-tab="generate" bindtap="switchTab">
+      <text class="tab-label">生成</text>
+    </view>
+    <view class="tab-item {{tab === 'library' ? 'active' : ''}}" data-tab="library" bindtap="switchTab">
+      <text class="tab-label">灵感库</text>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="page-scroll" wx:if="{{tab === 'generate'}}">
+    <view class="prompt-area">
+      <textarea class="prompt-input" placeholder="描述你想要生成的图像..." placeholder-style="color: #D1D5DB;line-height:48rpx" value="{{prompt}}" bindinput="onPromptInput" maxlength="500" auto-height />
+      <view class="prompt-footer">
+        <view class="prompt-tools">
+          <view class="prompt-tool-btn">
+            <text class="tool-icon-text">+</text>
+            <text class="tool-label">参考图</text>
+          </view>
+        </view>
+        <button class="generate-btn {{!canGenerate || generating ? 'disabled' : ''}}" bindtap="doGenerate">
+          {{generating ? '生成中...' : '生成'}}
+        </button>
+      </view>
+    </view>
+
+    <view class="options-section">
+      <view class="option-group">
+        <text class="option-label">风格</text>
+        <view class="grid-4">
+          <view class="chip {{style === 'realistic' ? 'active' : ''}}" data-style="realistic" bindtap="setStyle">
+            <text>写实</text>
+          </view>
+          <view class="chip {{style === 'anime' ? 'active' : ''}}" data-style="anime" bindtap="setStyle">
+            <text>动漫</text>
+          </view>
+          <view class="chip {{style === 'oil' ? 'active' : ''}}" data-style="oil" bindtap="setStyle">
+            <text>油画</text>
+          </view>
+          <view class="chip {{style === 'sketch' ? 'active' : ''}}" data-style="sketch" bindtap="setStyle">
+            <text>素描</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="option-group">
+        <text class="option-label">画幅比例</text>
+        <view class="grid-5">
+          <view class="chip {{ratio === '1:1' ? 'active' : ''}}" data-ratio="1:1" bindtap="setRatio">
+            <text>1:1</text>
+          </view>
+          <view class="chip {{ratio === '16:9' ? 'active' : ''}}" data-ratio="16:9" bindtap="setRatio">
+            <text>16:9</text>
+          </view>
+          <view class="chip {{ratio === '9:16' ? 'active' : ''}}" data-ratio="9:16" bindtap="setRatio">
+            <text>9:16</text>
+          </view>
+          <view class="chip {{ratio === '4:3' ? 'active' : ''}}" data-ratio="4:3" bindtap="setRatio">
+            <text>4:3</text>
+          </view>
+          <view class="chip {{ratio === '3:4' ? 'active' : ''}}" data-ratio="3:4" bindtap="setRatio">
+            <text>3:4</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="option-group">
+        <text class="option-label">负面提示词</text>
+        <input class="neg-input" placeholder="不想要的元素..." placeholder-style="color: #D1D5DB" value="{{negativePrompt}}" bindinput="onNegativeInput" />
+      </view>
+
+      <view class="option-group">
+        <view class="slider-header">
+          <text class="option-label">细节强度</text>
+          <text class="slider-val">{{cfgScale}}</text>
+        </view>
+        <slider class="app-slider" min="1" max="20" step="0.5" value="{{cfgScale}}" bindchange="onCfgChange" activeColor="#171717" block-size="16" block-color="#171717" />
+        <view class="slider-labels">
+          <text>柔和</text>
+          <text>锐利</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-group" wx:if="{{results.length}}">
+      <view class="section-heading">
+        <text class="section-title">生成结果</text>
+      </view>
+      <view class="result-grid">
+        <view class="result-item" wx:for="{{results}}" wx:key="index" data-src="{{item}}" bindtap="previewImage">
+          <image src="{{item}}" mode="aspectFill" class="result-img" />
+          <view class="result-save" data-src="{{item}}" bindtap="saveImage">
+            <text class="save-icon">↓</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="home-footer-space"></view>
+  </scroll-view>
+
+  <scroll-view scroll-y class="page-scroll" wx:if="{{tab === 'library'}}">
+    <view class="library-header">
+      <view class="search-bar">
+        <text class="search-icon">⌕</text>
+        <input class="search-input" placeholder="搜索提示词..." placeholder-style="color: #9CA3AF" value="{{searchQuery}}" bindinput="onSearchInput" />
+      </view>
+      <view class="category-scroll">
+        <view class="category-track">
+          <view class="category-pill {{libraryTab === 'all' ? 'active' : ''}}" data-tab="all" bindtap="setLibraryTab">
+            <text>全部</text>
+          </view>
+          <view class="category-pill {{libraryTab === 'realistic' ? 'active' : ''}}" data-tab="realistic" bindtap="setLibraryTab">
+            <text>写实</text>
+          </view>
+          <view class="category-pill {{libraryTab === 'anime' ? 'active' : ''}}" data-tab="anime" bindtap="setLibraryTab">
+            <text>动漫</text>
+          </view>
+          <view class="category-pill {{libraryTab === 'oil' ? 'active' : ''}}" data-tab="oil" bindtap="setLibraryTab">
+            <text>油画</text>
+          </view>
+          <view class="category-pill {{libraryTab === 'sketch' ? 'active' : ''}}" data-tab="sketch" bindtap="setLibraryTab">
+            <text>素描</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="library-grid">
+      <view class="library-card" wx:for="{{filteredLibrary}}" wx:key="id" data-id="{{item.id}}" bindtap="showDetail">
+        <view class="library-image" style="background: linear-gradient(135deg, {{item.colors[0]}}, {{item.colors[1]}});">
+          <image wx:if="{{item.thumbnail}}" src="{{item.thumbnail}}" mode="aspectFill" class="library-thumb" />
+          <text wx:else class="library-glyph">{{item.glyph}}</text>
+        </view>
+        <view class="library-body">
+          <text class="library-prompt">{{item.prompt}}</text>
+          <view class="library-meta">
+            <text class="library-style">{{item.styleName}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="home-footer-space"></view>
+  </scroll-view>
+
+  <view class="detail-overlay {{detailItem ? 'show' : ''}}" wx:if="{{detailItem}}" bindtap="closeDetail"></view>
+  <view class="detail-panel {{detailItem ? 'show' : ''}}" wx:if="{{detailItem}}">
+    <view class="detail-handle"></view>
+    <view class="detail-image" style="background: linear-gradient(135deg, {{detailItem.colors[0]}}, {{detailItem.colors[1]}});">
+      <image wx:if="{{detailItem.thumbnail}}" src="{{detailItem.thumbnail}}" mode="aspectFill" class="detail-thumb" />
+      <text wx:else class="detail-glyph">{{detailItem.glyph}}</text>
+    </view>
+    <view class="detail-style-tag">{{detailItem.styleName}}</view>
+    <view class="detail-prompt-text">{{detailItem.prompt}}</view>
+    <view class="detail-actions">
+      <button class="detail-btn" bindtap="copyPrompt">复制提示词</button>
+      <button class="detail-btn primary" bindtap="useThisPrompt">使用此提示词</button>
+    </view>
+  </view>
+</view>
